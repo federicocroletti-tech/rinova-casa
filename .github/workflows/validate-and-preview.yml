@@ -1,0 +1,96 @@
+name: Validate WordPress theme and deploy preview
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rinova-casa-pages
+  cancel-in-progress: false
+
+jobs:
+  wordpress-smoke:
+    name: WordPress integration and PHP checks
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_DATABASE: wordpress
+          MARIADB_USER: wp
+          MARIADB_PASSWORD: wp
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mysqli
+          coverage: none
+
+      - name: Install WP-CLI
+        run: |
+          curl --fail --silent --show-error --location https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output "$RUNNER_TEMP/wp-cli.phar"
+          chmod +x "$RUNNER_TEMP/wp-cli.phar"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+          mv "$RUNNER_TEMP/wp-cli.phar" "$RUNNER_TEMP/wp"
+
+      - name: Run PHP and WordPress integration smoke tests
+        run: bash tests/wordpress-smoke.sh
+
+      - name: Build and verify static preview
+        run: |
+          node scripts/build-preview.mjs
+          node scripts/validate-preview.mjs
+
+  deploy-preview:
+    name: Publish static design preview
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: wordpress-smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build static preview
+        run: |
+          node scripts/build-preview.mjs
+          node scripts/validate-preview.mjs
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload preview artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: preview-build
+
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v4

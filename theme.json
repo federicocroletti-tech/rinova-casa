@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.wp.org/wp/6.4/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "820px",
+      "wideSize": "1200px"
+    },
+    "color": {
+      "defaultPalette": false,
+      "palette": [
+        {
+          "color": "#202820",
+          "name": "Inchiostro",
+          "slug": "ink"
+        },
+        {
+          "color": "#52634d",
+          "name": "Verde",
+          "slug": "green"
+        },
+        {
+          "color": "#354535",
+          "name": "Verde scuro",
+          "slug": "green-dark"
+        },
+        {
+          "color": "#f7f6f1",
+          "name": "Carta",
+          "slug": "paper"
+        }
+      ]
+    },
+    "typography": {
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "fontFamily": "Georgia, 'Times New Roman', serif",
+          "name": "Serif",
+          "slug": "serif"
+        },
+        {
+          "fontFamily": "'Avenir Next', Avenir, 'Segoe UI', sans-serif",
+          "name": "Sans serif",
+          "slug": "sans"
+        }
+      ]
+    },
+    "spacing": {
+      "units": ["px", "rem", "%", "vw"]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#f7f6f1",
+      "text": "#202820"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--sans)",
+      "lineHeight": "1.65"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "#52634d"
+        }
+      },
+      "heading": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--serif)",
+          "fontWeight": "400"
+        }
+      }
+    }
+  }
+}
