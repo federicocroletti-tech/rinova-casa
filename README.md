@@ -13,6 +13,13 @@ Tema dimostrativo in italiano per il sito di una piccola impresa di ristrutturaz
 7. Imposta un indirizzo amministrativo valido in **Impostazioni → Generali**, configura HTTPS e una struttura dei permalink funzionante, quindi verifica l’invio email dal provider. Il modulo inoltra le richieste con `wp_mail`, senza salvarle come contenuti nel database; messaggi e dati tecnici possono essere conservati dai sistemi di posta e hosting.
 8. Prima della messa online verifica accessibilità, sicurezza e privacy dell’intera installazione, inclusi cookie impostati da WordPress, tema, hosting e plugin. Il tema non include analytics o servizi remoti e non installa cookie di profilazione.
 
+### Installazione locale con LocalWP
+
+1. Crea un nuovo sito in LocalWP e avvialo.
+2. Apri **WP Admin** e accedi con le credenziali create da LocalWP.
+3. In **Aspetto → Temi → Aggiungi nuovo tema → Carica tema**, carica lo ZIP installabile e seleziona **Installa**.
+4. Attiva il tema e segui i passaggi di configurazione sopra. Per provare il modulo, configura prima una casella email di test: LocalWP da solo non garantisce la consegna dei messaggi.
+
 ## Requisiti
 
 - WordPress 6.4 o superiore
